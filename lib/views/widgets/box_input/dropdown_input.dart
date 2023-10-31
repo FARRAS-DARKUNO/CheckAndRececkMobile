@@ -6,11 +6,13 @@ import 'package:flutter/material.dart';
 class DropdownInput extends StatefulWidget {
   final String hintText;
   final TextEditingController dropdown;
+  final VoidCallback action;
 
   const DropdownInput({
     Key? key,
     required this.hintText,
     required this.dropdown,
+    required this.action,
   }) : super(key: key);
 
   @override
@@ -18,14 +20,13 @@ class DropdownInput extends StatefulWidget {
 }
 
 class _DropdownInputState extends State<DropdownInput> {
-  String dropdownValue = "Test";
+  String dropdownValue = "waktu-lama";
 
-  List<String> category = ["Test", "Test1", "Test2", "Test3"];
+  List<String> category = ["waktu-lama", "waktu-baru", "nama-asc", "nama-desc"];
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      // Wrap your Column with SingleChildScrollView
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,6 +61,7 @@ class _DropdownInputState extends State<DropdownInput> {
                         dropdownValue = value!;
                         widget.dropdown.text = value;
                       });
+                      widget.action();
                     },
                     items:
                         category.map<DropdownMenuItem<String>>((String value) {

@@ -1,4 +1,5 @@
 import 'package:checking_stock/data/models/product_model.dart';
+import 'package:checking_stock/data/repositories/product_reposirory/product_repo.dart';
 import 'package:checking_stock/utils/colors.dart';
 import 'package:checking_stock/utils/fonts.dart';
 import 'package:checking_stock/utils/route.dart';
@@ -17,21 +18,21 @@ class ListProductPage extends StatefulWidget {
 class _ListProductPageState extends State<ListProductPage> {
   final search = TextEditingController(text: "");
 
-  List<Productmodel> data = [];
+  List<Data> data = [];
 
   action() async {
-    // ProductRepo().getProduct(search.text).then((value) {
-    //   setState(() {
-    //     data = value;
-    //   });
-    // });
+    ProductRepo().getProduct(search.text).then((value) {
+      setState(() {
+        data = value.data;
+      });
+    });
   }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   action();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    action();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,32 +52,32 @@ class _ListProductPageState extends State<ListProductPage> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               width: sWidthFull(context),
               height: sHeightMinus(context, 173),
-              child: ListView(children: [
-                // children: data.map((value) {
-                GestureDetector(
-                  onTap: () => gotoCreateUpdateProduct(context, 1),
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    color: cTersier,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text("Nama Barang", style: h3(cWhite)),
-                            Text("100", style: h3(cWhite))
-                          ],
-                        ),
-                        Text('\nPaling Bnyak  : 80', style: body1(cWhite)),
-                        Text('Paling Dikit : 80', style: body1(cWhite)),
-                      ],
+              child: ListView(
+                children: data.map((value) {
+                  return GestureDetector(
+                    onTap: () => gotoCreateUpdateProduct(context, value.id_barang),
+                    child: Container(
+                      margin:const  EdgeInsets.symmetric(vertical: 5),
+                      padding: const EdgeInsets.all(20),
+                      color: cTersier,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(value.name, style: h3(cWhite)),
+                              Text("${value.stock}", style: h3(cWhite))
+                            ],
+                          ),
+                          Text('\nPaling Bnyak  : ${value.max}', style: body1(cWhite)),
+                          Text('Paling Dikit : ${value.min}', style: body1(cWhite)),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              ]
-                  // }).toList(),
-                  ),
+                  );
+                }).toList(),
+              ),
             )
           ],
         ),

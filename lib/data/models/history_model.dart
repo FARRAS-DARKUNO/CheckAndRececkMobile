@@ -1,84 +1,140 @@
 import 'dart:convert';
 
-class Historymodel {
-  final int id;
-  final String nama;
-  final int jumlah;
-  final String jenis;
-  final String tanggal;
-  Historymodel({
-    required this.id,
-    required this.nama,
-    required this.jumlah,
-    required this.jenis,
-    required this.tanggal,
+import 'package:flutter/foundation.dart';
+
+class HistoryModel {
+  final String status;
+  final List<Data> data;
+  HistoryModel({
+    required this.status,
+    required this.data,
   });
 
-  Historymodel copyWith({
-    int? id,
-    String? nama,
-    int? jumlah,
-    String? jenis,
-    String? tanggal,
+  HistoryModel copyWith({
+    String? status,
+    List<Data>? data,
   }) {
-    return Historymodel(
-      id: id ?? this.id,
-      nama: nama ?? this.nama,
-      jumlah: jumlah ?? this.jumlah,
-      jenis: jenis ?? this.jenis,
-      tanggal: tanggal ?? this.tanggal,
+    return HistoryModel(
+      status: status ?? this.status,
+      data: data ?? this.data,
     );
   }
 
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
   
-    result.addAll({'id': id});
-    result.addAll({'nama': nama});
-    result.addAll({'jumlah': jumlah});
-    result.addAll({'jenis': jenis});
-    result.addAll({'tanggal': tanggal});
+    result.addAll({'status': status});
+    result.addAll({'data': data.map((x) => x.toMap()).toList()});
   
     return result;
   }
 
-  factory Historymodel.fromMap(Map<String, dynamic> map) {
-    return Historymodel(
-      id: map['id']?.toInt() ?? 0,
-      nama: map['nama'] ?? '',
-      jumlah: map['jumlah']?.toInt() ?? 0,
-      jenis: map['jenis'] ?? '',
-      tanggal: map['tanggal'] ?? '',
+  factory HistoryModel.fromMap(Map<String, dynamic> map) {
+    return HistoryModel(
+      status: map['status'] ?? '',
+      data: List<Data>.from(map['data']?.map((x) => Data.fromMap(x))),
     );
   }
 
   String toJson() => json.encode(toMap());
 
-  factory Historymodel.fromJson(String source) => Historymodel.fromMap(json.decode(source));
+  factory HistoryModel.fromJson(String source) => HistoryModel.fromMap(json.decode(source));
+
+  @override
+  String toString() => 'HistoryModel(status: $status, data: $data)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+  
+    return other is HistoryModel &&
+      other.status == status &&
+      listEquals(other.data, data);
+  }
+
+  @override
+  int get hashCode => status.hashCode ^ data.hashCode;
+}
+
+class Data {
+  final int id_jual;
+  final String name;
+  final int jumlah;
+  final String jenis;
+  final String date;
+  Data({
+    required this.id_jual,
+    required this.name,
+    required this.jumlah,
+    required this.jenis,
+    required this.date,
+  });
+
+  Data copyWith({
+    int? id_jual,
+    String? name,
+    int? jumlah,
+    String? jenis,
+    String? date,
+  }) {
+    return Data(
+      id_jual: id_jual ?? this.id_jual,
+      name: name ?? this.name,
+      jumlah: jumlah ?? this.jumlah,
+      jenis: jenis ?? this.jenis,
+      date: date ?? this.date,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+  
+    result.addAll({'id_jual': id_jual});
+    result.addAll({'name': name});
+    result.addAll({'jumlah': jumlah});
+    result.addAll({'jenis': jenis});
+    result.addAll({'date': date});
+  
+    return result;
+  }
+
+  factory Data.fromMap(Map<String, dynamic> map) {
+    return Data(
+      id_jual: map['id_jual']?.toInt() ?? 0,
+      name: map['name'] ?? '',
+      jumlah: map['jumlah']?.toInt() ?? 0,
+      jenis: map['jenis'] ?? '',
+      date: map['date'] ?? '',
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Data.fromJson(String source) => Data.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'Historymodel(id: $id, nama: $nama, jumlah: $jumlah, jenis: $jenis, tanggal: $tanggal)';
+    return 'Data(id_jual: $id_jual, name: $name, jumlah: $jumlah, jenis: $jenis, date: $date)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
   
-    return other is Historymodel &&
-      other.id == id &&
-      other.nama == nama &&
+    return other is Data &&
+      other.id_jual == id_jual &&
+      other.name == name &&
       other.jumlah == jumlah &&
       other.jenis == jenis &&
-      other.tanggal == tanggal;
+      other.date == date;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^
-      nama.hashCode ^
+    return id_jual.hashCode ^
+      name.hashCode ^
       jumlah.hashCode ^
       jenis.hashCode ^
-      tanggal.hashCode;
+      date.hashCode;
   }
 }

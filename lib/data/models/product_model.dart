@@ -1,29 +1,85 @@
 import 'dart:convert';
 
-class Productmodel {
-  final int id;
-  final String nama;
+import 'package:flutter/foundation.dart';
+
+class ProductModel {
+  final String status;
+  final List<Data> data;
+  ProductModel({
+    required this.status,
+    required this.data,
+  });
+
+  ProductModel copyWith({
+    String? status,
+    List<Data>? data,
+  }) {
+    return ProductModel(
+      status: status ?? this.status,
+      data: data ?? this.data,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    final result = <String, dynamic>{};
+  
+    result.addAll({'status': status});
+    result.addAll({'data': data.map((x) => x.toMap()).toList()});
+  
+    return result;
+  }
+
+  factory ProductModel.fromMap(Map<String, dynamic> map) {
+    return ProductModel(
+      status: map['status'] ?? '',
+      data: List<Data>.from(map['data']?.map((x) => Data.fromMap(x))),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory ProductModel.fromJson(String source) => ProductModel.fromMap(json.decode(source));
+
+  @override
+  String toString() => 'ProductModel(status: $status, data: $data)';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+  
+    return other is ProductModel &&
+      other.status == status &&
+      listEquals(other.data, data);
+  }
+
+  @override
+  int get hashCode => status.hashCode ^ data.hashCode;
+}
+
+class Data {
+  final int id_barang;
+  final String name;
   final int stock;
   final int min;
   final int max;
-  Productmodel({
-    required this.id,
-    required this.nama,
+  Data({
+    required this.id_barang,
+    required this.name,
     required this.stock,
     required this.min,
     required this.max,
   });
 
-  Productmodel copyWith({
-    int? id,
-    String? nama,
+  Data copyWith({
+    int? id_barang,
+    String? name,
     int? stock,
     int? min,
     int? max,
   }) {
-    return Productmodel(
-      id: id ?? this.id,
-      nama: nama ?? this.nama,
+    return Data(
+      id_barang: id_barang ?? this.id_barang,
+      name: name ?? this.name,
       stock: stock ?? this.stock,
       min: min ?? this.min,
       max: max ?? this.max,
@@ -33,8 +89,8 @@ class Productmodel {
   Map<String, dynamic> toMap() {
     final result = <String, dynamic>{};
   
-    result.addAll({'id': id});
-    result.addAll({'nama': nama});
+    result.addAll({'id_barang': id_barang});
+    result.addAll({'name': name});
     result.addAll({'stock': stock});
     result.addAll({'min': min});
     result.addAll({'max': max});
@@ -42,10 +98,10 @@ class Productmodel {
     return result;
   }
 
-  factory Productmodel.fromMap(Map<String, dynamic> map) {
-    return Productmodel(
-      id: map['id']?.toInt() ?? 0,
-      nama: map['nama'] ?? '',
+  factory Data.fromMap(Map<String, dynamic> map) {
+    return Data(
+      id_barang: map['id_barang']?.toInt() ?? 0,
+      name: map['name'] ?? '',
       stock: map['stock']?.toInt() ?? 0,
       min: map['min']?.toInt() ?? 0,
       max: map['max']?.toInt() ?? 0,
@@ -54,20 +110,20 @@ class Productmodel {
 
   String toJson() => json.encode(toMap());
 
-  factory Productmodel.fromJson(String source) => Productmodel.fromMap(json.decode(source));
+  factory Data.fromJson(String source) => Data.fromMap(json.decode(source));
 
   @override
   String toString() {
-    return 'Productmodel(id: $id, nama: $nama, stock: $stock, min: $min, max: $max)';
+    return 'Data(id_barang: $id_barang, name: $name, stock: $stock, min: $min, max: $max)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
   
-    return other is Productmodel &&
-      other.id == id &&
-      other.nama == nama &&
+    return other is Data &&
+      other.id_barang == id_barang &&
+      other.name == name &&
       other.stock == stock &&
       other.min == min &&
       other.max == max;
@@ -75,8 +131,8 @@ class Productmodel {
 
   @override
   int get hashCode {
-    return id.hashCode ^
-      nama.hashCode ^
+    return id_barang.hashCode ^
+      name.hashCode ^
       stock.hashCode ^
       min.hashCode ^
       max.hashCode;

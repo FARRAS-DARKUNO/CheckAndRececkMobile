@@ -1,31 +1,29 @@
 import 'package:checking_stock/data/base/base_url.dart';
-import 'package:checking_stock/data/models/product_model.dart';
+import 'package:checking_stock/data/models/category_model.dart';
 import 'package:checking_stock/data/models/status_model.dart';
 import 'package:dio/dio.dart';
 
-class ProductRepo {
+class CategoryRepo {
   var dio = Dio();
 
-  Future<ProductModel> getProduct(String search) async {
+  Future<CategoryModel> getCategory(String search) async {
     dio.options.headers['content-Type'] = 'application/json';
     try {
-      var response = await dio.get("${baseUrl}barang?search=$search");
+      var response = await dio.get("${baseUrl}jenis?search=$search");
 
       print(response.data);
 
-      return ProductModel.fromMap(response.data);
+      return CategoryModel.fromMap(response.data);
     } catch (_) {
-      print("error");
-      print(_);
-      return ProductModel(status: 'Filed', data: []);
+      return CategoryModel(status: 'Filed', data: []);
     }
   }
 
-  Future<StatusModel> updateProduct(int id, String name, int stock) async {
-    Map data = {"id": id, "name": name, "stock": stock};
+  Future<StatusModel> updateCategory(int id, String name) async {
+    Map data = {"id": id, "name": name};
     try {
       var response = await dio.put(
-        "${baseUrl}barang",
+        "${baseUrl}jenis",
         data: data,
         options: Options(
           headers: {"accept": "*/*", "Content-Type": "application/json"},
@@ -34,17 +32,15 @@ class ProductRepo {
 
       return StatusModel.fromMap(response.data);
     } catch (_) {
-      print("error");
-      print(_);
       return StatusModel(status: "Failed");
     }
   }
 
-  Future<StatusModel> createProduct(String name, int stock) async {
-    Map data = {"name": name, "stock": stock};
+  Future<StatusModel> createCategory(String name) async {
+    Map data = {"name": name};
     try {
       var response = await dio.post(
-        "${baseUrl}barang",
+        "${baseUrl}jenis",
         data: data,
         options: Options(
           headers: {"accept": "*/*", "Content-Type": "application/json"},
@@ -53,8 +49,6 @@ class ProductRepo {
 
       return StatusModel.fromMap(response.data);
     } catch (_) {
-      print("error");
-      print(_);
       return StatusModel(status: "Failed");
     }
   }
